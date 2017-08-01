@@ -25,7 +25,6 @@ export default class Title extends Phaser.State {
         });
         titleText.anchor.x = 0.5;
 
-
         let hero = this.game.add.sprite(260, 400, Assets.Spritesheets.Hero.getName());
         hero.anchor.set(0.5, 0.5);
         hero.scale.set(3);

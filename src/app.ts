@@ -11,6 +11,7 @@ import LevelChange from './states/levelchange';
 import * as Assets from './assets';
 import Title from "./states/title";
 import Help from "./states/help";
+import Win from "./states/win";
 
 class App extends Phaser.Game {
     constructor(config: Phaser.IGameConfig) {
@@ -22,6 +23,7 @@ class App extends Phaser.Game {
         this.state.add('levelchange', LevelChange);
         this.state.add('title', Title);
         this.state.add('help', Help);
+        this.state.add('win', Win);
 
         this.state.start('boot');
     }

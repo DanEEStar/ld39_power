@@ -9,6 +9,12 @@ export default class LevelChange extends Phaser.State {
 
     public create(): void {
         Music.getInstance().setPlaybackRate(1.0);
-        this.game.state.start('game', true, false, this.level);
+
+        if (this.level > 5) {
+            this.game.state.start('win');
+        }
+        else {
+            this.game.state.start('game', true, false, this.level);
+        }
     }
 }
