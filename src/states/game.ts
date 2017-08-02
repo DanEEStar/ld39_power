@@ -119,6 +119,27 @@ export default class GameState extends Phaser.State {
         this.powerTween = this.add.tween(this.power).to( { value: 0 }, POWER_TWEEN_DURATION, Phaser.Easing.Quadratic.Out, true);
     }
 
+    public heroCarrotCollision(hero, carrot) {
+        let self = this;
+
+        let carrotCopy = this.game.add.sprite(carrot.x, carrot.y, Assets.Spritesheets.Goal.getName());
+        carrotCopy.anchor.set(0.5, 0.5);
+        carrotCopy.scale.set(1.0);
+        carrot.kill();
+
+        let scale = this.game.add.tween(carrotCopy.scale);
+        scale.to({x: 10, y: 10});
+        scale.start();
+
+        let carrotAnimation = this.game.add.tween(carrotCopy);
+        carrotAnimation.to({angle: 360, x: 960 / 2, y: 640 / 2});
+        carrotAnimation.to({alpha: 0});
+        carrotAnimation.onComplete.add(function() {
+            self.game.state.start('levelchange', true, false, self.levelNumber + 1);
+        });
+        carrotAnimation.start();
+    }
+
     public update(): void {
         const self = this;
         // this.tintValue += 1;
@@ -131,8 +152,9 @@ export default class GameState extends Phaser.State {
         });
 
         self.game.physics.arcade.collide(self.hero, self.goal, function() {
-            self.goal.kill();
-            self.game.state.start('levelchange', true, false, self.levelNumber + 1);
+            self.heroCarrotCollision(self.hero, self.goal);
+            //self.goal.kill();
+            //self.game.state.start('levelchange', true, false, self.levelNumber + 1);
         });
 
         this.hero.body.velocity.set(0);
