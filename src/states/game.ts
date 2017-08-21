@@ -18,13 +18,14 @@ export default class GameState extends Phaser.State {
     private layer: Phaser.TilemapLayer;
 
     private powerupSound: Phaser.Sound;
+    private carrotSound: Phaser.Sound;
 
     private hero: Phaser.Sprite = null;
     private goal: Phaser.Sprite = null;
     private power = null;
     private powerTween: Phaser.Tween;
     private speed = 0;
-
+    private endAnimation = false;
 
     private powerstars: Array<Phaser.Sprite> = [];
 
@@ -40,12 +41,15 @@ export default class GameState extends Phaser.State {
         this.cursors = this.input.keyboard.createCursorKeys();
 
         this.powerupSound = this.game.add.sound(Assets.Audio.Powerup.getName());
+        this.carrotSound = this.game.add.sound(Assets.Audio.Carrot.getName());
 
         this.map = this.add.tilemap('tilemap', 48, 48, 960, 576);
         this.map.addTilesetImage(Assets.Images.ImagesTileset.getName());
         this.layer = this.map.createLayer(0);
         this.layer.resizeWorld();
         this.map.setCollisionBetween(16, 31);
+
+        this.endAnimation = false;
 
         this.loadSpecialTiles();
 
@@ -122,6 +126,12 @@ export default class GameState extends Phaser.State {
     public heroCarrotCollision(hero, carrot) {
         let self = this;
 
+        this.endAnimation = true;
+
+        hero.body.moves = false;
+
+        this.carrotSound.play();
+
         let carrotCopy = this.game.add.sprite(carrot.x, carrot.y, Assets.Spritesheets.Goal.getName());
         carrotCopy.anchor.set(0.5, 0.5);
         carrotCopy.scale.set(1.0);
@@ -142,7 +152,10 @@ export default class GameState extends Phaser.State {
 
     public update(): void {
         const self = this;
-        // this.tintValue += 1;
+        if (this.endAnimation) {
+            return;
+        }
+
         this.game.physics.arcade.collide(this.hero, this.layer);
 
         this.powerstars.forEach(function(powerstar) {
@@ -153,8 +166,6 @@ export default class GameState extends Phaser.State {
 
         self.game.physics.arcade.collide(self.hero, self.goal, function() {
             self.heroCarrotCollision(self.hero, self.goal);
-            //self.goal.kill();
-            //self.game.state.start('levelchange', true, false, self.levelNumber + 1);
         });
 
         this.hero.body.velocity.set(0);

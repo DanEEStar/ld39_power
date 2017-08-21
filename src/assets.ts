@@ -89,6 +89,11 @@ export namespace Audio {
         static getName(): string { return 'powerup'; }
         static getMP3(): string { return require('assets/audio/powerup.mp3'); }
     }
+
+    export class Carrot {
+        static getName(): string { return 'carrot'; }
+        static getMP3(): string { return require('assets/audio/carrot.mp3'); }
+    }
 }
 
 export namespace Audiosprites {
